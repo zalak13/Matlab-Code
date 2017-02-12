@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>plotd3 example</title>
+    <script src="d3.v3.min.js"></script>
+    <link rel="stylesheet" href="nv.d3.css">
+    <script src="nv.d3.min.js"></script>
+
+
+</head>
+<body>
+<div id='chart'>
+    <svg style="height:98vh;"> </svg>
+
+    <script>
+        function parseJSON(input) {
+
+            var inputData = input;//{"x1":[1,2,3,4,5,6,7],"y1":[30,38,46,5,13,21,22],"x2":[1,2,3,4,5,6,7],"y2":[39,47,6,14,15,23,31],"x3":[1,2,3,4,5,6,7],"y3":[48,7,8,16,24,32,40],"x4":[1,2,3,4,5,6,7],"y4":[1,9,17,25,33,41,49],"x5":[1,2,3,4,5,6,7],"y5":[10,18,26,34,42,43,2],"x6":[1,2,3,4,5,6,7],"y6":[19,27,35,36,44,3,11],"x7":[1,2,3,4,5,6,7],"y7":[28,29,37,45,4,12,20]};
+            var out = [];
+
+            var len = Object.keys(inputData).length / 2;
+
+            for (var i = 1; i<=len; i++) {
+                var series = {
+                    key: "(X" + i + ", Y" + i + ")",
+                    values: []
+                };
+                for (var j = 0, len2 = inputData["x" + i].length; j<len2; j++){
+                    series.values.push({
+                        x: inputData["x" + i][j],
+                        y: inputData["y" + i][j]
+                    });
+                }
+                out.push(series);
+            }
+
+
+            return out;
+        }
+
+        nv.addGraph(function() {
+            var chart = nv.models.lineChart().color([
+                "#0072BD",
+                "#D95319",
+                "#EDB120",
+                "#7E2F8E",
+                "#77AC30",
+                "#4DBEEE",
+                "#A2142F"
+            ]);
+
+            chart.xAxis
+                    .axisLabel("X-axis Label");
+
+            chart.yAxis
+                    .axisLabel("Y-axis Label")
+                    .tickFormat(d3.format("d"))
+            ;
+			var jsoninput;
+            d3.select("svg")
+                    .datum(parseJSON(jsoninput))
+                    .transition().duration(500).call(chart);
+
+            nv.utils.windowResize(
+                    function() {
+                        chart.update();
+                    }
+            );
+
+            return chart;
+        });
+    </script>
+
+</div>
+</body>
+</html>
